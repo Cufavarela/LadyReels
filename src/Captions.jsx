@@ -3,12 +3,26 @@ import { loadFont } from '@remotion/google-fonts/Anton';
 
 const { fontFamily } = loadFont();
 
+const CHUNK_SIZE = 4;
+const TRAILING_HOLD_FRAMES = 6;
+
 export const Captions = ({ words, style }) => {
   const frame = useCurrentFrame();
 
+  const activeChunk = [];
+  for (let i = 0; i < words.length; i += CHUNK_SIZE) {
+    const chunk = words.slice(i, i + CHUNK_SIZE);
+    const chunkStart = chunk[0].startFrame;
+    const chunkEnd = chunk[chunk.length - 1].endFrame + TRAILING_HOLD_FRAMES;
+    if (frame >= chunkStart && frame <= chunkEnd) {
+      activeChunk.push(...chunk);
+      break;
+    }
+  }
+
   return (
     <div className={`${style.positionY} flex-wrap gap-x-5 gap-y-4 justify-center items-center`}>
-      {words.map((word, index) => {
+      {activeChunk.map((word, index) => {
         const isActive = frame >= word.startFrame && frame <= word.endFrame;
 
         return (
