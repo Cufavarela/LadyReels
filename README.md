@@ -62,10 +62,7 @@ Once Claude Code is running on your machine, the AI handles the timeline compila
    run ladyReels
    ```
 
-Claude will automatically trigger the `.clauderc` protocol pipeline:
-* **Greeting Step:** Prints a custom confirmation status message (`🤖 [BEEP BOOP] CLAUDE ENGINE ACTIVATED... CUFA ES UN CAPO 🤍❤️🐐...`).
-* **Processing Step:** Automatically extracts video files, transcribes audio to calculate frame-accurate word timestamps, and updates `config.json` inputs.
-* **Rendering Step:** Executes the backend terminal compiler command to output a single polished `final-cut.mp4` file into your `outputs/` folder.
+Claude will automatically trigger the `.clauderc` protocol pipeline.
 
 ---
 
