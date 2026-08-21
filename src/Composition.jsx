@@ -51,7 +51,7 @@ const punchZoomScale = (frame, zoomWindows) => {
   return scale;
 };
 
-const Scene = ({ video, zoomWindows, graphicWindows }) => {
+const Scene = ({ video, zoomWindows, graphicWindows, words, style }) => {
   const frame = useCurrentFrame();
   const scale = punchZoomScale(frame, zoomWindows);
 
@@ -72,10 +72,12 @@ const Scene = ({ video, zoomWindows, graphicWindows }) => {
         }}
       />
       <MotionGraphics windows={graphicWindows} />
+      
+      {/* ¡LA MEJORA ACÁ! Los subtítulos ahora corren bajo el tiempo local de esta escena */}
+      {words && words.length > 0 && <Captions words={words} style={style} />}
     </AbsoluteFill>
   );
 };
-
 const POP_PAD = 8;
 
 const MotionGraphics = ({ windows }) => {
@@ -174,7 +176,6 @@ const TRANSITIONS = [
 
 export const ReelComposition = ({ style, timeline }) => {
   const scenes = timeline.scenes || [];
-  const words = timeline.words || [];
 
   return (
     <AbsoluteFill className="bg-black">
@@ -188,13 +189,17 @@ export const ReelComposition = ({ style, timeline }) => {
               />
             )}
             <TransitionSeries.Sequence durationInFrames={scene.durationInFrames}>
-              <Scene video={scene.video} zoomWindows={scene.zoomWindows} graphicWindows={scene.graphicWindows} />
+              <Scene 
+                video={scene.video} 
+                zoomWindows={scene.zoomWindows} 
+                graphicWindows={scene.graphicWindows}
+                words={scene.words}
+                style={style}
+              />
             </TransitionSeries.Sequence>
           </Fragment>
         ))}
       </TransitionSeries>
-
-      {words.length > 0 && <Captions words={words} style={style} />}
     </AbsoluteFill>
   );
 };
