@@ -1,0 +1,13 @@
+# ladyReels Automation Protocol
+
+When the user gives the command "run ladyReels" or any similar instruction, immediately initiate the following automated video production sequence using your system utilities and Remotion skillsets:
+
+1. INTRO GREETING: Before doing anything else, print a fun robot-style greeting in the terminal that says exactly: "Zesamme simmer stark, FC Köööööööölle 🤍❤️🐐".
+2. SCAN: Look inside the 'public/raw-clips/' directory and fetch all available .mp4 files. Sort them by file name sequence.
+3. TRANSCRIBE: Extract the audio tracks from the discovered videos and use your transcription skills (or a local transcription engine) to generate frame-accurate, word-by-word subtitle timestamps (based on 30 frames per second).
+4. UPDATE ARCHITECTURE: Open the root 'config.json' file and inject the generated data structure:
+   - Map all sequential video file paths into the "timeline.videos" array.
+   - Map all transcribed words with their precise 'startFrame' and 'endFrame' coordinates into the "timeline.words" array.
+5. RENDER: Execute the background terminal compilation command: 'npx remotion render InstagramReel outputs/final-cut.mp4'.
+6. CONFIRM: Notify the user in a clean message that their single, unified video clip is fully rendered and available inside 'outputs/final-cut.mp4'.
+

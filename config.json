@@ -1,0 +1,25 @@
+{
+  "style": {
+    "fontFamily": "'Anton', sans-serif",
+    "fontSize": "text-5xl md:text-6xl",
+    "textTransform": "uppercase",
+    "textColor": "#FFFFFF",
+    "textStroke": "2px #000000",
+    "textShadow": "4px 4px 0px #000000, 2px 2px 4px rgba(0,0,0,0.8)",
+    "highlight": {
+      "backgroundColor": "bg-violet-600",
+      "borderRadius": "rounded-xl",
+      "padding": "px-4 py-2",
+      "textColor": "#FFFFFF"
+    },
+    "positionY": "absolute bottom-[20%] left-0 right-0 flex justify-center text-center px-6"
+  },
+  "timeline": {
+    "videos": [],
+    "words": [], 
+    "transition": {
+      "type": "none",
+      "durationInFrames": 0
+    }
+  }
+}
