@@ -17,6 +17,7 @@ import { saturation } from "@remotion/effects/saturation";
 import { tint } from "@remotion/effects/tint";
 import { vignette } from "@remotion/effects/vignette";
 import { Captions } from "./Captions";
+import { MotionGraphics } from "./MotionGraphics";
 
 const GRADE_EFFECTS = [
   contrast({ amount: 1.12 }),
@@ -51,7 +52,7 @@ const punchZoomScale = (frame, zoomWindows) => {
   return scale;
 };
 
-const Scene = ({ video, zoomWindows, graphicWindows, words, style }) => {
+const Scene = ({ video, zoomWindows, graphicWindows, words, style, startFrom, endAt }) => {
   const frame = useCurrentFrame();
   const scale = punchZoomScale(frame, zoomWindows);
 
@@ -61,6 +62,8 @@ const Scene = ({ video, zoomWindows, graphicWindows, words, style }) => {
         src={staticFile(video)}
         objectFit="cover"
         effects={GRADE_EFFECTS}
+        startFrom={startFrom || 0}
+        endAt={endAt || undefined}
         style={{
           width: "100%",
           height: "100%",
@@ -75,88 +78,6 @@ const Scene = ({ video, zoomWindows, graphicWindows, words, style }) => {
       
       {/* ¡LA MEJORA ACÁ! Los subtítulos ahora corren bajo el tiempo local de esta escena */}
       {words && words.length > 0 && <Captions words={words} style={style} />}
-    </AbsoluteFill>
-  );
-};
-const POP_PAD = 8;
-
-const MotionGraphics = ({ windows }) => {
-  const frame = useCurrentFrame();
-
-  return (
-    <AbsoluteFill>
-      {windows.map((w, i) => {
-        const popStart = w.startFrame - POP_PAD;
-        const popEnd = w.endFrame + POP_PAD;
-        if (frame < popStart || frame > popEnd) return null;
-
-        const opacity = interpolate(
-          frame,
-          [popStart, w.startFrame, w.endFrame, popEnd],
-          [0, 1, 1, 0],
-          {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-            easing: Easing.bezier(0.16, 1, 0.3, 1),
-          }
-        );
-        const scale = interpolate(
-          frame,
-          [popStart, w.startFrame, popEnd],
-          [0.85, 1, 1],
-          {
-            output: "perceptual-scale",
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-            easing: Easing.bezier(0.16, 1, 0.3, 1),
-          }
-        );
-
-        return (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              top: "9%",
-              left: 40,
-              right: 40,
-              display: "flex",
-              justifyContent: "center",
-              opacity,
-              scale,
-            }}
-          >
-            <div
-              style={{
-                background: "linear-gradient(135deg, #7c3aed, #4c1d95)",
-                border: "3px solid #000000",
-                borderRadius: 16,
-                padding: "10px 26px",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                boxShadow: "6px 6px 0px #000000",
-                maxWidth: "88%",
-              }}
-            >
-              <span style={{ fontSize: 30 }}>💡</span>
-              <span
-                style={{
-                  fontFamily: "'Anton', sans-serif",
-                  color: "#FFFFFF",
-                  fontSize: 26,
-                  textTransform: "uppercase",
-                  letterSpacing: 1,
-                  WebkitTextStroke: "1px #000000",
-                  lineHeight: 1.1,
-                }}
-              >
-                {w.label}
-              </span>
-            </div>
-          </div>
-        );
-      })}
     </AbsoluteFill>
   );
 };
@@ -195,6 +116,8 @@ export const ReelComposition = ({ style, timeline }) => {
                 graphicWindows={scene.graphicWindows}
                 words={scene.words}
                 style={style}
+                startFrom={scene.startFrom}
+                endAt={scene.endAt}
               />
             </TransitionSeries.Sequence>
           </Fragment>

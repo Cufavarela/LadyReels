@@ -1,13 +1,40 @@
 # ladyReels Automation Protocol
 
-When the user gives the command "run ladyReels" or any similar instruction, immediately initiate the following automated video production sequence using your system utilities and Remotion skillsets:
+When the user gives the command "run ladyReels", immediately initiate the following automated video production sequence using your system utilities, local scripts, and Remotion skillset:
 
-1. INTRO GREETING: Before doing anything else, print a fun robot-style greeting in the terminal that says exactly: "Zesamme simmer stark, FC Köööööööölle 🤍❤️🐐".
-2. SCAN: Look inside the 'public/raw-clips/' directory and fetch all available .mp4 files. Sort them by file name sequence.
-3. TRANSCRIBE: Extract the audio tracks from the discovered videos and use your transcription skills (or a local transcription engine) to generate frame-accurate, word-by-word subtitle timestamps (based on 30 frames per second).
-4. UPDATE ARCHITECTURE: Open the root 'config.json' file and inject the generated data structure:
-   - Map all sequential video file paths into the "timeline.videos" array.
-   - Map all transcribed words with their precise 'startFrame' and 'endFrame' coordinates into the "timeline.words" array.
-5. RENDER: Execute the background terminal compilation command: 'npx remotion render InstagramReel outputs/final-cut.mp4'.
-6. CONFIRM: Notify the user in a clean message that their single, unified video clip is fully rendered and available inside 'outputs/final-cut.mp4'.
+1. INTRO GREETING: Print exactly: "🤖 [BEEP BOOP] 1.FC Köln 🤍❤️🐐...".
 
+2. STEP 1: INITIAL ANALYSIS & TRANSCRIPTION
+   - Execute 'npm run process-clips' (or use available transcription engines) to get the raw word-by-word timestamps for the full duration of each clip in 'public/raw-clips/'.
+   - Identify dead air silences, breaths, filler words (e.g., "eh", "um"), or mistakes at the beginning and end of each clip.
+
+3. STEP 2: CREATIVE EDITING & TIMELINE TRIMMING
+   - For each video clip, determine the optimal structural cut boundaries:
+     * 'startFrom': The exact frame index (at 30fps) where the meaningful content/speech actually begins.
+     * 'endAt': The exact frame index where the structural speech ends before camera-shutoff noise.
+     * 'durationInFrames': Calculate precisely as (endAt - startFrom).
+   
+4. STEP 3: LOCAL TIME SHIFTING & EFFECT DIRECTION
+   - Rewrite the root 'config.json' file using the "timeline.scenes" format.
+   - RE-INDEX WORDS (CRITICAL): Shift all speech timestamps to LOCAL SCENE TIME. Since 'startFrom' becomes the new frame 0, subtract the 'startFrom' value from every word's 'startFrame' and 'endFrame' within that scene.
+ - STRUCTURED GRAPHICS ENGINE (SIMPLIFIED PROTOCOL):
+    You must direct exactly three types of graphic banners inside "graphicWindows" based on these rules:
+
+    1. WELCOME BANNER (type: "welcome"):
+       - Must trigger at the very beginning of the FIRST scene (from local frame 0 to frame 45).
+       - Read the text from the '[REEL_TITLE]' section of 'public/editor-rules.txt'. Use that exact string as the "label".
+       - This banner will render large and centered on screen.
+    2. DETAILS BANNER (type: "details"):
+       - Check if 'public/editor-rules.txt' has a trigger keyword or analyze if the top area of the video frame has empty space/background dead zone.
+       - If there is a key tip or empty top space, place a banner at the top of the video (duration: 60 frames) using a helpful label (e.g., "DETALLES IMPORTANTES" or custom keyword mapping).
+    3. FAREWELL BANNER (type: "farewell"):
+       - Must trigger at the very end of the LAST scene (for the last 45 frames of the video).
+       - Read the text from the '[REEL_FAREWELL_TITLE]' section of 'public/editor-rules.txt'. If exists, Use that exact string as the "label", if not use a call to action as the "label" (e.g., "SEGUIME PARA MÁS", "CHAU CHAU", "COMENTÁ ABAJO").
+
+  - PUNCH-IN ZOOMS:
+    - Keep reading your '[ZOOM_KEYWORDS]' list from the txt to force short 1.3x zooms (20 to 45 frames) on those specific words.
+
+
+5. STEP 4: VIDEO COMPILATION
+   - Execute the background terminal compilation engine command: 'npm run render'.
+   - Notify the user with a clean status wrap-up message when 'outputs/final-cut.mp4' is fully cooked and ready for social media export ✨🎬🚀.
